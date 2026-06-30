@@ -200,6 +200,16 @@ describe('RFP & Bid Settlement (acceptance)', () => {
     expect(conflict.body.error).toBe('ALREADY_AWARDED');
   });
 
+  it('404 when awarding a bid that does not exist on the RFP', async () => {
+    const rfp = await createRfp();
+    await submitBid(rfp.body.id, 100_000, 'vendor-1');
+    const res = await http
+      .post(`/rfps/${rfp.body.id}/award`)
+      .send({ bidId: 'no-such-bid' });
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('BID_NOT_FOUND');
+  });
+
   it('rejects bids on an RFP that is no longer OPEN (409)', async () => {
     const { rfpId } = await createAwardedRfp(100_000);
     const res = await submitBid(rfpId, 50_000, 'vendor-9');
@@ -279,13 +289,13 @@ describe('RFP & Bid Settlement (acceptance)', () => {
   // ---- Deadline (time-dependent) ------------------------------------------
 
   it('blocks bidding and awarding after the deadline passes', async () => {
-    const rfp = await createRfp({ submissionDeadline: futureIso(800) });
+    const rfp = await createRfp({ submissionDeadline: futureIso(1_500) });
     const rfpId = rfp.body.id as string;
     // Bid BEFORE the deadline: allowed.
     const early = await submitBid(rfpId, 100_000, 'vendor-1');
     expect(early.status).toBe(201);
 
-    await sleep(1_100); // let the deadline pass
+    await sleep(2_000); // let the deadline pass
 
     const lateBid = await submitBid(rfpId, 120_000, 'vendor-2');
     expect(lateBid.status).toBe(422);
@@ -412,6 +422,23 @@ describe('RFP & Bid Settlement (acceptance)', () => {
     const types: string[] = res.body.map((e: { type: string }) => e.type);
     expect(types).toContain('RFP_CANCELLED');
     expect(types).toContain('BID_REJECTED');
+  });
+
+  it('records BID_SUPERSEDED before the new BID_SUBMITTED on resubmission', async () => {
+    const rfp = await createRfp();
+    const first = await submitBid(rfp.body.id, 100_000, 'vendor-1');
+    await submitBid(rfp.body.id, 120_000, 'vendor-1');
+
+    const res = await http.get(`/rfps/${rfp.body.id}/events`).expect(200);
+    const events: Array<{ type: string; bidId: string | null }> = res.body;
+    expect(events.map((e) => e.type)).toEqual([
+      'RFP_CREATED',
+      'BID_SUBMITTED',
+      'BID_SUPERSEDED',
+      'BID_SUBMITTED',
+    ]);
+    const superseded = events.find((e) => e.type === 'BID_SUPERSEDED');
+    expect(superseded?.bidId).toBe(first.body.id);
   });
 
   // ---- Listing & pagination -----------------------------------------------
