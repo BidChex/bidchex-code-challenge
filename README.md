@@ -83,14 +83,27 @@ part of working with it well.
 
 ---
 
-## Record your working session
+## Document your decisions (writing or recording, your choice)
 
-We want to see how you work, so **screen-record yourself doing the challenge**, start to finish.
+We want to see how you think, especially the design decisions and the moments where you and the
+AI disagreed. You can show us this in **either** of two ways. Pick one:
+
+1. **Write it down (default).** Capture your decisions in the `.md` files: the design sections of
+   [`SUBMISSION.md`](./SUBMISSION.md) and, optionally, [`ai-logs/DECISIONS.md`](./ai-logs/DECISIONS.md).
+   This is the simplest path and needs no extra tooling.
+2. **Record yourself instead (optional alternative).** If you would rather not write the decisions
+   down, **screen-record yourself doing the challenge** and narrate your reasoning out loud as you
+   go. The recording then stands in for the written decisions.
+
+**Screen recording is optional** - only do it if you choose option 2. If you write your decisions
+in the `.md`, you do not need to record at all.
+
+If you do record:
 
 - **Recommended tool: [OBS Studio](https://obsproject.com/)** - free, open source, easy to set
   up, and available for Windows, macOS, and Linux. (Zero-install fallbacks if you prefer: macOS
   `Cmd+Shift+5`, Windows Xbox Game Bar `Win+G`.)
-- Record your screen. Narrating your thinking out loud is optional but welcome.
+- Narrate your thinking out loud as you work; that narration is the point of recording.
 - When you finish, upload the video and share a link. **Prefer YouTube, set to Unlisted.** Google
   Drive, Proton Drive, or any other file host also work. Put the link in
   [`SUBMISSION.md`](./SUBMISSION.md).
@@ -126,7 +139,9 @@ fee engine). The skeleton already compiles; the business logic is stubbed out an
    npm install
    npm test          # the acceptance tests run and FAIL. That is expected: they are your target.
    ```
-3. **Start your screen recorder** (OBS Studio, or an OS built-in). Record the whole session.
+3. **If you chose to record** (see *Document your decisions* above), **start your screen recorder**
+   now (OBS Studio, or an OS built-in) and record the whole session. Skip this if you are writing
+   your decisions in the `.md` instead.
 4. **Start the work timer.** Do this before you start thinking about the problem:
    ```bash
    npm run time:start
@@ -190,7 +205,7 @@ often** with small, meaningful commits. We like to see the trail.
 
 ### Phase 5 - Finish and self-check
 
-1. Stop the timer, and **stop your screen recording**:
+1. Stop the timer (and **stop your screen recording** if you recorded one):
    ```bash
    npm run time:stop
    ```
@@ -206,19 +221,20 @@ often** with small, meaningful commits. We like to see the trail.
 
 1. Make sure your **commit history is clean and well organized**. We review it as part of the
    evaluation: small, atomic commits, clear messages, in a logical order.
-2. Upload your screen recording and put the link (YouTube Unlisted preferred) in
-   [`SUBMISSION.md`](./SUBMISSION.md).
+2. **If you recorded**, upload your screen recording and put the link (YouTube Unlisted preferred)
+   in [`SUBMISSION.md`](./SUBMISSION.md). If you wrote your decisions in the `.md` instead, skip
+   this.
 3. Push everything to your fork. We must be able to open it: keep the fork **public**, or if you
    make it private, add us as a collaborator. The fork must contain:
    - Your implementation, with `npm run check` green.
-   - A filled-in [`SUBMISSION.md`](./SUBMISSION.md), including the recording link.
+   - A filled-in [`SUBMISSION.md`](./SUBMISSION.md), including either your written decisions or the
+     recording link.
    - At least one chat export in [`ai-logs/exports/`](./ai-logs/exports) (a prompt log in
      [`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md) is optional if the export covers it).
    - The committed `.timelog.jsonl` and the generated `REPORT.md`.
    - Your full commit history.
-4. **Email [joao@bidchex.com](mailto:joao@bidchex.com)** with two links:
-   - your **fork** (the repo), and
-   - your **screen recording**.
+4. **Email [joao@bidchex.com](mailto:joao@bidchex.com)** with your **fork** link (the repo). If you
+   chose to record, include the **screen recording** link too.
 
 That email is the final step. Once it is sent, you are done.
 
@@ -237,7 +253,7 @@ That email is the final step. Once it is sent, you are done.
 - Resist scope creep (YAGNI). Depth on the spec beats inventing extra features.
 - Commit small and often, with clear messages. **We review your commit history**, so keep it
   organized and logical. Commit the AI logs and the timer file too.
-- Deliver by forking, then emailing the fork link and the recording link to
+- Deliver by forking, then emailing the fork link (and the recording link, if you recorded one) to
   [joao@bidchex.com](mailto:joao@bidchex.com). See Phase 6.
 
 If anything in the spec is genuinely ambiguous, make a reasonable decision, write it down in

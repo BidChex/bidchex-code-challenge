@@ -3,10 +3,15 @@
 Fill in every section. Replace each `<!-- FILL ME -->` with your real answer. Be concrete and
 honest. This is read alongside your code and your AI logs.
 
-## 0. Screen recording link
+## 0. Screen recording link (optional)
 
-<!-- FILL ME --> (link to your full screen recording of doing this challenge; YouTube Unlisted
-preferred, or Google Drive / Proton Drive / any file host. Make sure the link is viewable.)
+<!-- FILL ME --> (paste a recording link, or write "N/A - decisions documented in writing")
+
+Recording is **optional**. You only need this if you chose to record yourself instead of writing
+your decisions down (see *Document your decisions* in the README). If you recorded, paste the link
+to your full screen recording here (YouTube Unlisted preferred, or Google Drive / Proton Drive /
+any file host; make sure the link is viewable). If you documented your decisions in writing
+instead, write "N/A" and make sure sections 2-5 below are thorough.
 
 ## 1. Your AI setup
 
