@@ -3,6 +3,11 @@
 Fill in every section. Replace each `<!-- FILL ME -->` with your real answer. Be concrete and
 honest. This is read alongside your code and your AI logs.
 
+## 0. Screen recording link
+
+<!-- FILL ME --> (link to your full screen recording of doing this challenge; YouTube Unlisted
+preferred, or Google Drive / Proton Drive / any file host. Make sure the link is viewable.)
+
 ## 1. Your AI setup
 
 <!-- FILL ME -->

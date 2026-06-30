@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Pre-submission completeness gate. Verifies the deliverables a reviewer expects
 // are present and filled. Does NOT run the tests (use `npm run check` for that).
-// Run: node scripts/verify:submission  ->  node scripts/check.mjs
+// Run: npm run verify:submission
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -25,19 +25,21 @@ const submissionFilled =
   !/_replace this entire/i.test(submission);
 check('SUBMISSION.md filled out', submissionFilled, 'Remove all <!-- FILL ME --> markers and answer every section.');
 
-// 2. PROMPTS.md has at least 3 logged prompts.
-const prompts = read('ai-logs/PROMPTS.md');
-const promptCount = prompts
-  ? prompts.split('\n').filter((l) => /^##\s+/.test(l) && !/\bTEMPLATE\b/i.test(l)).length
-  : 0;
-check('ai-logs/PROMPTS.md has >= 3 prompts', promptCount >= 3, `Found ${promptCount}. Log each meaningful prompt you sent the AI.`);
-
-// 3. At least one exported chat in ai-logs/exports/.
+// 2. Evidence of how you worked with the AI: a chat export (preferred) OR a prompt log.
+//    A full chat export makes ai-logs/PROMPTS.md optional.
 const exportsDir = join(ROOT, 'ai-logs', 'exports');
 const exportCount = existsSync(exportsDir)
   ? readdirSync(exportsDir).filter((f) => !f.startsWith('.') && f !== 'README.md').length
   : 0;
-check('ai-logs/exports/ has >= 1 chat export', exportCount >= 1, 'Export your AI chat (see ai-logs/HOW-TO-EXPORT.md) and drop the file here.');
+const prompts = read('ai-logs/PROMPTS.md');
+const promptCount = prompts
+  ? prompts.split('\n').filter((l) => /^##\s+/.test(l) && !/\bTEMPLATE\b/i.test(l)).length
+  : 0;
+check(
+  'AI work shown: >= 1 chat export (preferred) OR >= 3 logged prompts',
+  exportCount >= 1 || promptCount >= 3,
+  'Export your AI chat into ai-logs/exports/ (see ai-logs/HOW-TO-EXPORT.md). That alone is enough; otherwise log >= 3 prompts in ai-logs/PROMPTS.md.',
+);
 
 // 4. Timer used (at least one completed start/stop pair).
 const log = read('.timelog.jsonl');

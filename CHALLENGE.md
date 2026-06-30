@@ -1,4 +1,4 @@
-# Challenge specification — RFP & Bid Settlement Service
+# Challenge specification - RFP & Bid Settlement Service
 
 You are building a small backend service for a procurement flow (a simplified version of what
 we actually do at BidChex). A client posts an **RFP** (request for proposal) for some work.
@@ -23,9 +23,9 @@ is already wired (controller, module, DTOs, error filter). You implement the dom
 - **LineItem**: `{ description, quantity (int > 0), unitPriceCents (int >= 0) }`.
 - **Settlement**: `{ id, rfpId, idempotencyKey, awardedAmountCents, platformFeeCents, vendorPayoutCents, status, settledAt }`.
 - **FeePolicy** (discriminated union), applied at settlement to the awarded amount:
-  - `{ type: 'PERCENTAGE', bps }` — basis points, e.g. `250` = 2.50%.
-  - `{ type: 'FLAT', cents }` — a fixed fee in cents.
-  - `{ type: 'TIERED', tiers: [{ uptoCents, bps }] }` — **marginal** brackets (like income tax).
+  - `{ type: 'PERCENTAGE', bps }` - basis points, e.g. `250` = 2.50%.
+  - `{ type: 'FLAT', cents }` - a fixed fee in cents.
+  - `{ type: 'TIERED', tiers: [{ uptoCents, bps }] }` - **marginal** brackets (like income tax).
     The final tier has `uptoCents: null` ("and everything above").
 
 The exact TypeScript shapes are in [`src/bidding/domain/types.ts`](./src/bidding/domain/types.ts).
@@ -183,6 +183,9 @@ This mirrors how we write code at BidChex. We care about:
 5. **Tests that pin the tricky rules**, not just the happy path.
 6. **How you drove the AI.** We will read your prompts and chat export. Show us where you
    caught the AI being wrong, over-engineering, or cutting a corner, and how you fixed it.
+7. **How you set rules for the AI.** `CLAUDE.md` has a section for you to define your own rules
+   and coding standards for the AI. We read it. Clear, deliberate rules are a core skill of
+   working with AI well; a blank or careless section is a signal.
 
 You do not need to add auth, a database, Swagger, or extra endpoints. Resist scope creep
 (YAGNI). Depth on the spec beats breadth.

@@ -1,4 +1,4 @@
-# BidChex Code Challenge — RFP & Bid Settlement Service
+# BidChex Code Challenge - RFP & Bid Settlement Service
 
 Welcome, and thanks for taking the time. This is a take-home coding challenge. It is
 **medium-hard** and is meant to be done **with an AI coding assistant** (Claude Code, Cursor,
@@ -49,22 +49,51 @@ good way to see how you would actually work with us.
 - **Plan:** we run **Claude Max 20x**. You do **not** need that much for this: a **Max 10x**
   plan is more than enough to finish with headroom to spare. (A regular Pro plan or API credits
   also work; you just have less room.)
-- **[oh-my-claudecode (OMC)](https://github.com/Yeachan-Heo/oh-my-claudecode/)** — a multi-agent
-  orchestration layer for Claude Code (teams, planning, parallel execution). Install:
-  ```bash
-  npx oh-my-claude-sisyphus@latest
-  ```
-  then run `setup omc` (or `/oh-my-claudecode:omc-setup`) inside a Claude Code session.
-- **[ai-memory](https://github.com/akitaonrails/ai-memory)** — long-term project memory for the
-  agent (a persistent, git-versioned markdown wiki + lifecycle hooks). Quick wire-up for Claude
-  Code (see the repo for the full guide):
-  ```bash
-  ai-memory install-mcp   --client claude-code --apply
-  ai-memory install-hooks --agent  claude-code --apply
-  ```
+- **[oh-my-claudecode (OMC)](https://github.com/Yeachan-Heo/oh-my-claudecode/)**: a multi-agent
+  orchestration layer for Claude Code (teams, planning, parallel execution). Open the repo and
+  follow its install instructions.
+- **[ai-memory](https://github.com/akitaonrails/ai-memory)**: long-term project memory for the
+  agent (a persistent, git-versioned markdown wiki + lifecycle hooks). Open the repo and follow
+  its install instructions.
 
 None of this is mandatory, and we are not grading which tool you picked. We grade how you drive
 it. But if you want to mirror our environment, this is it.
+
+---
+
+## Rules for your AI assistant (and for you)
+
+This repo ships a **[`CLAUDE.md`](./CLAUDE.md)** with rules for the AI. Most AI agents read it
+automatically; if yours does not, paste its contents into your AI's context. The short version:
+your AI assistant (and you) must **not touch the files that define the test itself**.
+
+- Do **not** edit, weaken, skip, `.skip`, or delete `test/acceptance.e2e-spec.ts`. Make it pass
+  honestly, by implementing real behavior.
+- Do **not** edit the brief (`README.md`, `CHALLENGE.md`, `CLAUDE.md`) or the build/test config
+  and tooling (`package.json`, `tsconfig*.json`, `nest-cli.json`, `jest.config.cjs`, anything in
+  `scripts/`, or the `ai-logs/` instructions).
+
+Changing any of those to make tests pass or to alter the timer/gate accounting is an automatic
+fail. You write your solution in `src/bidding/**` and add your **own** test files there. See
+[`CLAUDE.md`](./CLAUDE.md) for the full allow/deny list.
+
+`CLAUDE.md` also has a section at the bottom for **you** to write your own rules and coding
+standards for the AI. Fill it in: we evaluate that too. Defining clear rules for an AI is a core
+part of working with it well.
+
+---
+
+## Record your working session
+
+We want to see how you work, so **screen-record yourself doing the challenge**, start to finish.
+
+- **Recommended tool: [OBS Studio](https://obsproject.com/)** - free, open source, easy to set
+  up, and available for Windows, macOS, and Linux. (Zero-install fallbacks if you prefer: macOS
+  `Cmd+Shift+5`, Windows Xbox Game Bar `Win+G`.)
+- Record your screen. Narrating your thinking out loud is optional but welcome.
+- When you finish, upload the video and share a link. **Prefer YouTube, set to Unlisted.** Google
+  Drive, Proton Drive, or any other file host also work. Put the link in
+  [`SUBMISSION.md`](./SUBMISSION.md).
 
 ---
 
@@ -77,8 +106,9 @@ it. But if you want to mirror our environment, this is it.
 | **[`test/acceptance.e2e-spec.ts`](./test/acceptance.e2e-spec.ts)** | The acceptance tests = **the bar you must clear**. Black-box HTTP tests. **Do not edit them.** | Right after the spec |
 | **[`SUBMISSION.md`](./SUBMISSION.md)** | A template you fill in: your AI setup, workflow, decisions, and where you overrode the AI. | Fill in at the end |
 | **[`ai-logs/README.md`](./ai-logs/README.md)** | How to record your work with the AI (prompts + chat export). | Before you start prompting |
-| **[`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md)** | A running log of the prompts you send. | Update as you go |
+| **[`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md)** | A running log of the prompts you send. Optional if you export your full chat history. | Update as you go (optional) |
 | **[`ai-logs/HOW-TO-EXPORT.md`](./ai-logs/HOW-TO-EXPORT.md)** | Per-tool instructions to export your full chat transcript. | When you export your chat |
+| **[`ai-logs/DECISIONS.md`](./ai-logs/DECISIONS.md)** | Optional: short notes on decisions, especially where you and the AI disagreed. | As you go (optional) |
 
 The code you implement lives in **[`src/bidding/`](./src/bidding)** (mainly the service and the
 fee engine). The skeleton already compiles; the business logic is stubbed out and waiting for you.
@@ -87,22 +117,24 @@ fee engine). The skeleton already compiles; the business logic is stubbed out an
 
 ## Step by step
 
-### Phase 0 — Get set up (about 5 minutes)
+### Phase 0 - Get set up (about 5 minutes)
 
-1. **Fork** this repo (or clone it) to your own **private** GitHub repo.
+1. **Fork** this repo to your own GitHub account. You deliver your fork at the end, and we review
+   its commit history, so commit as you go.
 2. Install dependencies and confirm the project runs:
    ```bash
    npm install
    npm test          # the acceptance tests run and FAIL. That is expected: they are your target.
    ```
-3. **Start the work timer.** Do this before you start thinking about the problem:
+3. **Start your screen recorder** (OBS Studio, or an OS built-in). Record the whole session.
+4. **Start the work timer.** Do this before you start thinking about the problem:
    ```bash
    npm run time:start
    ```
    (Run `npm run time:stop` whenever you take a real break, and `time:start` again when you
    resume. `npm run time:status` shows the running total.)
 
-### Phase 1 — Understand the task (about 20 to 30 minutes)
+### Phase 1 - Understand the task (about 20 to 30 minutes)
 
 1. Read **[`CHALLENGE.md`](./CHALLENGE.md)** fully. It describes the whole flow: create an RFP,
    vendors submit bids, award one bid, optionally cancel, and settle the awarded bid with a
@@ -116,13 +148,13 @@ fee engine). The skeleton already compiles; the business logic is stubbed out an
 This is a great moment to use your AI: have it read the spec and the tests with you, summarize
 the rules, and propose a plan. **Review that plan critically before you act on it.**
 
-### Phase 2 — Build it, with AI (the main work)
+### Phase 2 - Build it, with AI (the main work)
 
 Implement the domain. The two files with the real logic to write are:
 
-- **[`src/bidding/bidding.service.ts`](./src/bidding/bidding.service.ts)** — the state machine
+- **[`src/bidding/bidding.service.ts`](./src/bidding/bidding.service.ts)** - the state machine
   and all business rules.
-- **[`src/bidding/fee/fee-engine.ts`](./src/bidding/fee/fee-engine.ts)** — the fee calculation
+- **[`src/bidding/fee/fee-engine.ts`](./src/bidding/fee/fee-engine.ts)** - the fee calculation
   (percentage, flat, tiered, min/max bounds), with the money-conservation invariant.
 
 You may add helpers, value objects, private methods, whatever you need. Keep the controller thin
@@ -135,7 +167,7 @@ npm run start:dev      # API on http://localhost:3000
 As you work, **log your prompts** in [`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md) and **commit
 often** with small, meaningful commits. We like to see the trail.
 
-### Phase 3 — Test and add your own tests
+### Phase 3 - Test and add your own tests
 
 1. Make the acceptance tests pass:
    ```bash
@@ -147,45 +179,55 @@ often** with small, meaningful commits. We like to see the trail.
    math, bounds, the conservation invariant, malformed policies) and the state machine
    (supersede, award, cancel, idempotency, event ordering).
 
-### Phase 4 — Document how you worked with the AI
+### Phase 4 - Document how you worked with the AI
 
-1. Make sure [`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md) reflects the prompts you actually sent.
-2. **Export at least one full chat transcript** into
-   [`ai-logs/exports/`](./ai-logs/exports). Follow
-   [`ai-logs/HOW-TO-EXPORT.md`](./ai-logs/HOW-TO-EXPORT.md) for your specific tool.
+1. **Export at least one full chat transcript** into [`ai-logs/exports/`](./ai-logs/exports).
+   Follow [`ai-logs/HOW-TO-EXPORT.md`](./ai-logs/HOW-TO-EXPORT.md) for your tool. This is the main
+   artifact we read. A full export makes [`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md) optional;
+   only keep a prompt log if you cannot export, or to highlight key prompts.
 3. Fill in **[`SUBMISSION.md`](./SUBMISSION.md)** completely. The most valuable section is where
    you describe the moments you **caught the AI being wrong** and what you did instead.
 
-### Phase 5 — Finish and self-check
+### Phase 5 - Finish and self-check
 
-1. Stop the timer:
+1. Stop the timer, and **stop your screen recording**:
    ```bash
    npm run time:stop
    ```
 2. Confirm everything is green and complete:
    ```bash
    npm run check               # typecheck + all tests must pass
-   npm run verify:submission   # checks SUBMISSION.md, prompts, exports, and timer are all done
+   npm run verify:submission   # gate: SUBMISSION.md filled, >= 1 chat export (or >= 3 logged prompts), timer used
    npm run report              # writes REPORT.md (time, prompt count, export count)
    ```
    Fix anything these flag.
 
-### Phase 6 — Hand it back
+### Phase 6 - Deliver
 
-Push your repo (or send a zip). It must contain:
+1. Make sure your **commit history is clean and well organized**. We review it as part of the
+   evaluation: small, atomic commits, clear messages, in a logical order.
+2. Upload your screen recording and put the link (YouTube Unlisted preferred) in
+   [`SUBMISSION.md`](./SUBMISSION.md).
+3. Push everything to your fork. We must be able to open it: keep the fork **public**, or if you
+   make it private, add us as a collaborator. The fork must contain:
+   - Your implementation, with `npm run check` green.
+   - A filled-in [`SUBMISSION.md`](./SUBMISSION.md), including the recording link.
+   - At least one chat export in [`ai-logs/exports/`](./ai-logs/exports) (a prompt log in
+     [`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md) is optional if the export covers it).
+   - The committed `.timelog.jsonl` and the generated `REPORT.md`.
+   - Your full commit history.
+4. **Email [joao@bidchex.com](mailto:joao@bidchex.com)** with two links:
+   - your **fork** (the repo), and
+   - your **screen recording**.
 
-- Your implementation, with `npm run check` green.
-- A filled-in [`SUBMISSION.md`](./SUBMISSION.md).
-- [`ai-logs/PROMPTS.md`](./ai-logs/PROMPTS.md) and at least one export in
-  [`ai-logs/exports/`](./ai-logs/exports).
-- The committed `.timelog.jsonl` and the generated `REPORT.md`.
-- Your commit history (small, frequent commits).
+That email is the final step. Once it is sent, you are done.
 
 ---
 
 ## Ground rules
 
-- **You must use AI**, and you must show us how (prompts + at least one chat export).
+- **You must use AI**, and you must show us how: export at least one full chat transcript (a
+  prompt log is optional if the export covers your prompts).
 - Use whatever AI tools and models you like. Tell us which, in [`SUBMISSION.md`](./SUBMISSION.md).
 - **Do not edit** [`test/acceptance.e2e-spec.ts`](./test/acceptance.e2e-spec.ts). Make it pass
   honestly.
@@ -193,7 +235,10 @@ Push your repo (or send a zip). It must contain:
   with the problem: model it, review the AI output, fix what it gets wrong.
 - It is completely fine (encouraged) to disagree with the AI and override it. Note those moments.
 - Resist scope creep (YAGNI). Depth on the spec beats inventing extra features.
-- Commit small and often. Commit the AI logs and the timer file.
+- Commit small and often, with clear messages. **We review your commit history**, so keep it
+  organized and logical. Commit the AI logs and the timer file too.
+- Deliver by forking, then emailing the fork link and the recording link to
+  [joao@bidchex.com](mailto:joao@bidchex.com). See Phase 6.
 
 If anything in the spec is genuinely ambiguous, make a reasonable decision, write it down in
 `SUBMISSION.md`, and move on. We value good judgment under ambiguity.
