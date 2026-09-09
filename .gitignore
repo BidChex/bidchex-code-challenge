@@ -7,5 +7,8 @@ coverage/
 .vscode/*
 !.vscode/extensions.json
 
+# OMC agent state (any nesting)
+**/.omc/
+
 # Keep these committed (they are part of the submission):
 #   .timelog.jsonl, REPORT.md, ai-logs/**, SUBMISSION.md
